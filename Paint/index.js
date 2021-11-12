@@ -28,15 +28,25 @@ addWholeHexColor = (c1,c2) => //* above function but for a 6 digit hex instead o
     }
     return hexStr
 }
-let colors=prompt(`give me 2 hex codes seperated by commas`); //* user input for initial and final colors
+let colors=prompt(`give me 2 hex codes seperated by commas, or type random`); //* user input for initial and final colors
 let orderPrompt=prompt(`order the colors, r, g, b, no spaces, eg rgb`); //* user input for initial order
 let order = []; //*initialise order
+let firstHexCode;
+let secondHexCode;
 for (l=0;l<3;l++)
 {
     order[l]=orderPrompt.charAt(l); //* set order to input
 }
-let firstHexCode=colors.split(`,`)[0]; //* split color input into 2 hex codes
-let secondHexCode=colors.split(`,`)[1];
+if (colors!="random")
+{
+    firstHexCode=colors.split(`,`)[0]; //* split color input into 2 hex codes
+    secondHexCode=colors.split(`,`)[1];
+}
+else
+{
+    firstHexCode=Math.floor(Math.random()*16777215).toString(16);
+    secondHexCode=Math.floor(Math.random()*16777215).toString(16);
+}
 let firstHexCodeSplit = []; //* initialise lists to store rgb hex codes
 let secondHexCodeSplit = [];
 let initialColor=[];
@@ -73,10 +83,13 @@ drawFunction = ()=>
             if (firstHexCodeSplit[k]<secondHexCodeSplit[k]) //* if its smaller
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1); //* add
+                console.log(`${order[completed]} going up`)
             }
             else
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* subtract
+                console.log(`${order[completed]} going down`)
+
             }
         }
         else 
@@ -91,10 +104,13 @@ drawFunction = ()=>
             if (firstHexCodeSplit[k]>initialColor[k]) //* if the chanigng color code is bigger than the initial given color
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* decrease the color code by 1
+                console.log(`${order[completed]} going down`)
+
             }
             else if (firstHexCodeSplit[k]<initialColor[k]) //* if the changing color code is smaller than the initial code
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1) //* increase it by 1
+                console.log(`${order[completed]} going up`)
             }
         }
         else
@@ -108,7 +124,7 @@ drawFunction = ()=>
     draw.lineTo(i*ratio/8,0); //*move to left edge
     draw.stroke(); //*draw line
     i++; //* change position slightly
-    if (firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit==secondHexCode) //* if changing color equals second color
+    if (firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2]==secondHexCode) //* if changing color equals second color
     {
         completed=0; //* reset index
         direction=(direction+1)%2 //* change direction

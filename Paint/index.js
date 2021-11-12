@@ -1,16 +1,16 @@
 // height is 711 width is 1536
-let canvas=document.getElementById("firstCanvas");
-let canvas1=document.getElementById("secondCanvas");  
-let ratio=window.innerWidth/window.innerHeight;
-canvas.height=window.innerHeight;
+let canvas=document.getElementById("firstCanvas"); //* The main canvas 
+let canvas1=document.getElementById("secondCanvas");  //* a WIP canvas
+let ratio=window.innerWidth/window.innerHeight; //* allows for shorter value storage, how quickly the painter moves across the page
+canvas.height=window.innerHeight;//*setting canvas dimensions to screen
 canvas.width=window.innerWidth;
 canvas1.height=window.innerHeight;
 canvas1.width=window.innerWidth;
-let draw=canvas.getContext("2d");
+let draw=canvas.getContext("2d"); //*allows to shorten calling the canvas
 let draw1=canvas1.getContext("2d");
-let i=0;
-let allColorsCount=0;
-addHexColor = (c1,c2)=>
+let i=0; //* counter to move the drawer along
+let allColorsCount=0; //* counter that stores all the colors for WIP project
+addHexColor = (c1,c2)=> //* function to add 2 hex numbers that was copy pasted cause i couldnt get it to work :(
 {
     let hexStr=(parseInt(c1,16) + parseInt(c2,16)).toString(16);
     while(hexStr.length<2)
@@ -19,7 +19,7 @@ addHexColor = (c1,c2)=>
     }
     return hexStr
 }
-addWholeHexColor = (c1,c2) =>
+addWholeHexColor = (c1,c2) => //* above function but for a 6 digit hex instead of a 2 digit
 {
     let hexStr=(parseInt(c1,16) + parseInt(c2,16)).toString(16);
     while(hexStr.length<6)
@@ -28,40 +28,33 @@ addWholeHexColor = (c1,c2) =>
     }
     return hexStr
 }
-let colors=prompt(`give me 2 hex codes seperated by commas`);
-let orderPrompt=prompt(`order the colors, r, g, b, no spaces`);
-let order = [];
-let anotherOrder = []
+let colors=prompt(`give me 2 hex codes seperated by commas`); //* user input for initial and final colors
+let orderPrompt=prompt(`order the colors, r, g, b, no spaces`); //* user input for initial order
+let order = []; //*initialise order
 for (l=0;l<3;l++)
 {
-    order[l]=orderPrompt.charAt(l);
-    anotherOrder[l]=orderPrompt.charAt(1);
+    order[l]=orderPrompt.charAt(l); //* set order to input
 }
-let firstHexCode=colors.split(`,`)[0];
+let firstHexCode=colors.split(`,`)[0]; //* split color input into 2 hex codes
 let secondHexCode=colors.split(`,`)[1];
-let firstHexCodeSplit = [];
+let firstHexCodeSplit = []; //* initialise lists to store rgb hex codes
 let secondHexCodeSplit = [];
 let initialColor=[];
-let red=false;
-let green=false;
-let blue=false;
-let k;
-let completed=0;
-let add=1;
-let done=false;
-for (j=0;j<3;j++)
+let k; //*index for lists
+let completed=0; //*initialises the variable that determines when an r/g/b has finished
+let direction=0; //* tells whether to compare color to initial or final color
+let directionChecker; //*stores direction for later comparison
+for (j=0;j<3;j++) //* splits hex code into rgb
 {
 firstHexCodeSplit[j]=firstHexCode.slice(2*j,2*j+2);
 secondHexCodeSplit[j]=secondHexCode.slice(2*j,2*j+2);
 initialColor[j]=firstHexCode.slice(2*j,2*j+2);
 }
-console.log(secondHexCode);
-// console.log(firstHexCodeSplit)
-// console.log(initialColor)
 drawFunction = ()=>
 {
-    draw.lineWidth=5;
-    if (order[completed]=="r")
+    directionChecker=direction;
+    draw.lineWidth=2;
+    if (order[completed]=="r") //* determines whether r/g/b should be changing
     {
         k=0;
     }
@@ -73,46 +66,63 @@ drawFunction = ()=>
     {
         k=2;
     }
-    if (firstHexCodeSplit[k]!=secondHexCodeSplit[k] || done==true)
+    if (direction==0) //* if going forward
     {
-        firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],add);
-        console.log(completed,k);
+        if (firstHexCodeSplit[k]!=secondHexCodeSplit[k]) //* if the changing color code isnt the second code
+        {
+            if (firstHexCodeSplit[k]<secondHexCodeSplit[k]) //* if its smaller
+            {
+                firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1); //* add
+            }
+            else
+            {
+                firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* subtract
+            }
+        }
+        else 
+        {
+            completed++; //* if the hex code is the same, go to the next list index
+        }
     }
-    else 
+    else if (direction==1) //* if going backward
     {
-        completed++;
+        if (firstHexCodeSplit[k]!=initialColor[k]) //* if the changing color code isnt the same as the initial given color
+        {
+            if (firstHexCodeSplit[k]>initialColor[k]) //* if the chanigng color code is bigger than the initial given color
+            {
+                firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* decrease the color code by 1
+            }
+            else if (firstHexCodeSplit[k]<initialColor[k]) //* if the changing color code is smaller than the initial code
+            {
+                firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1) //* increase it by 1
+            }
+        }
+        else
+        {
+            completed++; //* else increase list index to go to next r/g/b
+        }
     }
-    if (firstHexCodeSplit[k]==initialColor[k])
+    draw.strokeStyle="#"+firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2]; //* color of the stroke
+    draw.beginPath(); //* start drawing
+    draw.moveTo(0,i*ratio/8); //* move to top edge
+    draw.lineTo(i*ratio/8,0); //*move to left edge
+    draw.stroke(); //*draw line
+    i++; //* change position slightly
+    if (firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit==secondHexCode) //* if changing color equals second color
     {
-        console.log(k,firstHexCodeSplit[k],initialColor[k]);
-        completed++;
-    }
-    if (firstHexCodeSplit[k].length<2)
-    {
-        firstHexCodeSplit[k]="0"+firstHexCodeSplit[k];
-    }
-    //console.log(firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2] +"This")
-    draw.strokeStyle="#"+firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2];
-    draw.beginPath();
-    draw.moveTo(0,i*ratio/8);
-    draw.lineTo(i*ratio/8,0);
-    draw.stroke();
-    i++;
-    if (i==window.innerWidth)
-    {
-        i++;
-    }
-    if (firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2]==secondHexCode)
-    {
-        add=add*(-1)
-        done=true;
-        completed=0;
+        completed=0; //* reset index
+        direction=(direction+1)%2 //* change direction
     }
     else if (firstHexCodeSplit[0]+firstHexCodeSplit[1]+firstHexCodeSplit[2]==initialColor[0]+initialColor[1]+initialColor[2])
     {
-        add=add*(-1)
-        done=false;
-        completed=0;
+        completed=0; //* reset index
+        direction=(direction+1)%2 //* change direction
+    }
+    if (directionChecker!=direction) //* if direction has changed
+    {
+        let temp=order[0]
+        order.shift()
+        order.push(temp) //* shuffle order
     }
 }
 

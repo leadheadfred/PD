@@ -29,7 +29,7 @@ addWholeHexColor = (c1,c2) => //* above function but for a 6 digit hex instead o
     return hexStr
 }
 let colors=prompt(`give me 2 hex codes seperated by commas`); //* user input for initial and final colors
-let orderPrompt=prompt(`order the colors, r, g, b, no spaces`); //* user input for initial order
+let orderPrompt=prompt(`order the colors, r, g, b, no spaces, eg rgb`); //* user input for initial order
 let order = []; //*initialise order
 for (l=0;l<3;l++)
 {

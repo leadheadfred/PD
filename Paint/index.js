@@ -10,6 +10,15 @@ let draw=canvas.getContext("2d"); //*allows to shorten calling the canvas
 let draw1=canvas1.getContext("2d");
 let i=0; //* counter to move the drawer along
 let allColorsCount=0; //* counter that stores all the colors for WIP project
+const reorder = (direction,directionChecker)=>
+{
+    if (directionChecker!=direction) //* if direction has changed
+    {
+        let temp=order[0]
+        order.shift()
+        order.push(temp) //* shuffle order
+    }
+}
 addHexColor = (c1,c2)=> //* function to add 2 hex numbers that was copy pasted cause i couldnt get it to work :(
 {
     let hexStr=(parseInt(c1,16) + parseInt(c2,16)).toString(16);
@@ -35,7 +44,7 @@ let firstHexCode;
 let secondHexCode;
 for (l=0;l<3;l++)
 {
-    order[l]=orderPrompt.charAt(l); //* set order to input
+    order[l]=orderPrompt.charAt(l); //* set order to input  
 }
 if (colors!="random")
 {
@@ -83,12 +92,12 @@ drawFunction = ()=>
             if (firstHexCodeSplit[k]<secondHexCodeSplit[k]) //* if its smaller
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1); //* add
-                console.log(`${order[completed]} going up`)
+                //console.log(`${order[completed]} going up`)
             }
             else
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* subtract
-                console.log(`${order[completed]} going down`)
+                //console.log(`${order[completed]} going down`)
 
             }
         }
@@ -104,13 +113,13 @@ drawFunction = ()=>
             if (firstHexCodeSplit[k]>initialColor[k]) //* if the chanigng color code is bigger than the initial given color
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],-1); //* decrease the color code by 1
-                console.log(`${order[completed]} going down`)
+                //console.log(`${order[completed]} going down`)
 
             }
             else if (firstHexCodeSplit[k]<initialColor[k]) //* if the changing color code is smaller than the initial code
             {
                 firstHexCodeSplit[k]=addHexColor(firstHexCodeSplit[k],1) //* increase it by 1
-                console.log(`${order[completed]} going up`)
+                //console.log(`${order[completed]} going up`)
             }
         }
         else
@@ -134,12 +143,7 @@ drawFunction = ()=>
         completed=0; //* reset index
         direction=(direction+1)%2 //* change direction
     }
-    if (directionChecker!=direction) //* if direction has changed
-    {
-        let temp=order[0]
-        order.shift()
-        order.push(temp) //* shuffle order
-    }
+    //reorder(direction,directionChecker); //* Changes rgb order
 }
 
 let colorToPaint=000000;
@@ -148,13 +152,15 @@ allColors = ()=>
 {
     if (allColorsCount<16777216)
     {
+        console.log(colorToPaint);
+        draw1.lineWidth=0.5;
         draw1.strokeStyle="#"+colorToPaint
         draw1.beginPath();
-        draw1.moveTo(pos,0);
-        draw1.lineTo(pos,711);
+        draw1.moveTo(pos/4,0);
+        draw1.lineTo(pos/4,711);
         draw1.stroke();
-        colorToPaint= addWholeHexColor(colorToPaint,100);
-        console.log(`The hex code of your color is${colorToPaint}`)
+        colorToPaint= addWholeHexColor(colorToPaint,10);
+        //console.log(`The hex code of your color is${colorToPaint}`)
         pos++;
     } 
 }

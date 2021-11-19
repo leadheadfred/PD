@@ -17,7 +17,7 @@ Solutions: idk
 
 To revise: SDLC, ISTQB defintions, agile, STLC
 
-
+Spent most of this fiddling with code so not too much :(
 
 
 

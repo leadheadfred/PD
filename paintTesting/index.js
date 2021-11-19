@@ -42,7 +42,7 @@ modulo = (num1,num2)=>
     let output;
     if (num1<0)
     {
-        output=num2+num1
+        output=num2+num1+1
     }
     else
     {
@@ -50,12 +50,30 @@ modulo = (num1,num2)=>
     }
     return output
 }
-let colors=prompt(`give me hex codes seperated by commas, or type random`); //* user input for initial and final colors
+checkIndex = (index)=>
+{
+    if (index==inputLength)
+    {
+        index=0;
+    }
+    else if (index==-1)
+    {
+        index=inputLength-1
+    }
+    return index
+}
+let colors=prompt(`give me hex codes seperated by commas, or type random`);
+let inputLength=colors.split(",").length;
+let amount;
+if (colors=="random")
+{
+    amount=prompt(`how many colors?`)
+    inputLength=amount
+} //* user input for initial and final colors
 let orderPrompt=prompt(`order the colors, r, g, b, no spaces, eg rgb`); //* user input for initial order
 let order = []; //*initialise order
 let firstHexCode;
 let secondHexCode;
-let inputLength=colors.split(",").length;
 const hexCodeList = new Array;
 const hexCodeListSplit = new Array;
 for (l=0;l<3;l++)
@@ -70,8 +88,12 @@ for (m=0;m<inputLength;m++)
     }
     else
     {
-        firstHexCode=Math.floor(Math.random()*16777215).toString(16);
-        secondHexCode=Math.floor(Math.random()*16777215).toString(16);
+        hexCodeList[m]=Math.floor(Math.random()*16777215).toString(16)
+        console.log(hexCodeList[m])
+        while (hexCodeList[m].length!=6)
+        {
+            hexCodeList[m]=hexCodeList[m]+"0";
+        }
     }
 }
 for (aRandomCounter=0;aRandomCounter<inputLength;aRandomCounter++)
@@ -81,12 +103,13 @@ for (aRandomCounter=0;aRandomCounter<inputLength;aRandomCounter++)
     let c=hexCodeList[aRandomCounter].slice(4,6);
     hexCodeList[aRandomCounter]=[a,b,c];
 }
-let initialColor=[];
+let color=[];
+let finalColor=[];
 let firstHexCodeSplit = []; //* initialise lists to store rgb hex codes
 let secondHexCodeSplit = [];
-initialColor[0]=hexCodeList[0][0];
-initialColor[1]=hexCodeList[0][1];
-initialColor[2]=hexCodeList[0][2];
+color[0]=hexCodeList[0][0];
+color[1]=hexCodeList[0][1];
+color[2]=hexCodeList[0][2];
 let k; //*index for lists
 let completed=0; //*initialises the variable that determines when an r/g/b has finished
 let direction=0; //* tells whether to compare color to initial or final color
@@ -94,8 +117,9 @@ let directionChecker; //*stores direction for later comparison
 let index=0;
 drawFunction = ()=>
 {
+    index=checkIndex(index);
     directionChecker=direction;
-    draw.lineWidth=2;
+    draw.lineWidth=-1;
     if (order[completed]=="r") //* determines whether r/g/b should be changing
     {
         k=0;
@@ -110,90 +134,87 @@ drawFunction = ()=>
     }
     if (direction==0) //* if going forward
     {
-        if (hexCodeList[index][k]!=hexCodeList[modulo(index+1,inputLength)][k]) //* if the changing color code isnt the second code
+        if (color[k]!=hexCodeList[checkIndex(index+1)][k]) //* if the changing color code isnt the second code
         {
-            if (hexCodeList[index][k]<hexCodeList[modulo(index+1,inputLength)][k]) //* if its smaller
+            if (color[k]<hexCodeList[checkIndex(index+1)][k]) //* if its smaller
             {
-                hexCodeList[index][k]=addHexColor(hexCodeList[index][k],1); //* add
-                console.log(`${order[completed]} going up`)
+                color[k]=addHexColor(color[k],1); //* add
+                console.log(`${order[completed]} going up to ${hexCodeList[checkIndex(index+1)][k]}`)
             }
-            else 
+            else if (color[k]>hexCodeList[checkIndex(index+1)][k]) 
             {
-                hexCodeList[index][k]=addHexColor(hexCodeList[index][k],-1); //* subtract
-                console.log(`${order[completed]} going down`)
-
+                color[k]=addHexColor(color[k],-1); //* subtract
+                console.log(`${order[completed]} going down to ${hexCodeList[checkIndex(index+1)][k]}`)
             }
         }
         else 
         {
             completed++; //* if the hex code is the same, go to the next list index
-            if (completed==4)
+            if (completed==3)
             {
-                console.log("here1")
-           }
+                if (color.toString()==finalColor.toString())
+                {
+                    direction=(direction+1)%2
+                    completed=0;
+                    index++;
+                }
+                else if (color.toString()==hexCodeList[checkIndex(index+1)].toString())
+                {
+                    completed=0;
+                    index++;
+                }
+            }
         }
     }
     else if (direction==1) //* if going backward
     {
-        if (hexCodeList[index][k]!=hexCodeList[modulo(index-1,inputLength)][k]) //* if the changing color code isnt the same as the initial given color
+        console.log(hexCodeList[0][k],hexCodeList[checkIndex(index-1)][k],checkIndex(index-1),k,hexCodeList[0],hexCodeList[checkIndex(index-1)])
+        if (color[k]!=hexCodeList[checkIndex(index-1)][k]) //* if the changing color code isnt the same as the initial given color
         {
-            if (hexCodeList[index][k]>hexCodeList[modulo(index-1,inputLength)][k]) //* if the chanigng color code is bigger than the initial given color
+            console.log("there she goes")
+            if (color[k]>hexCodeList[checkIndex(index-1)][k]) //* if the chanigng color code is bigger than the initial given color
             {
-                hexCodeList[index][k]=addHexColor(hexCodeList[index][k],-1); //* decrease the color code by 1
-                console.log(`${order[completed]} going down here`)
+                color[k]=addHexColor(color[k],-1); //* decrease the color code by 1
+                console.log(`${order[completed]} going down to ${hexCodeList[checkIndex(index-1)][k]}`)
 
             }
-            else if (hexCodeList[index][k]<hexCodeList[modulo(index-1,inputLength)][k]) //* if the changing color code is smaller than the initial code
+            else if (color[k]<hexCodeList[checkIndex(index-1)][k]) //* if the changing color code is smaller than the initial code
             {
-                hexCodeList[index][k]=addHexColor(hexCodeList[index][k],1) //* increase it by 1
-                console.log(`${order[completed]} going up`)
+                color[k]=addHexColor(color[k],1) //* increase it by 1
+                console.log(`${order[completed]} going up to ${hexCodeList[checkIndex(index-1)][k]}`)
             }
         }
         else
         {
             completed++; //* else increase list index to go to next r/g/b
-            //console.log(completed)
-            console.log(k,index,hexCodeList[index][k],hexCodeList[modulo(index-1,inputLength)][k] + "here")
-            //!looping here
+            //console.log("second here"+completed)
+            if (completed==3)
+            {
+                if (color.toString()==initialColor.toString())
+                {
+                    direction=(direction+1)%2;
+                    completed=0;
+                    index--;
+                    //console.log("here is working")
+                }
+                else if (color.toString()==hexCodeList[checkIndex(index-1)].toString())
+                {
+                    completed=0;
+                    index--;
+                    //console.log("Here is also working")
+                }
+            }
         }
     }
-    draw.strokeStyle="#"+hexCodeList[index][0]+hexCodeList[index][1]+hexCodeList[index][2]; //* color of the stroke
+    draw.strokeStyle="#"+color[0]+color[1]+color[2]; //* color of the stroke
     draw.beginPath(); //* start drawing
-    draw.moveTo(0,i*ratio/8); //* move to top edge
-    draw.lineTo(i*ratio/8,0); //*move to left edge
+    //draw.moveTo(0,i*ratio/16); //* move to top edge
+    //draw.lineTo(i*ratio/16,0); //*move to left edge
+    draw.arc(700,350,i*ratio/16,0,2*Math.PI)
     draw.stroke(); //*draw line
     i++; //* change position slightly
-    let a=hexCodeList[index];
-    let b=hexCodeList[modulo(index+1,inputLength)]
-    if (completed==4)
-    {
-        console.log(hexCodeList[index],hexCodeList[modulo(index+1,inputLength)]);
-        console.table(a)
-        console.table(b)
-        if((hexCodeList[index] == hexCodeList[modulo(index+1,inputLength)]))
-        {
-            console.log('the error is elsewhere')
-        }
-    }
-   if (hexCodeList[index] == hexCodeList[modulo(index+1,inputLength)]) //* if changing color equals second color
-    {
-        completed=0; //* reset index
-        direction=(direction+1)%2 //* change direction
-        console.log(hexCodeList[index],hexCodeList[index+1] + "changing direction here")
-        console.log("def should show something here")
-    }
-    
-    else if (hexCodeList[index]==initialColor)
-    {
-        //!this is wrong
-        index++;    
-        k++;
-        completed=0; //* reset index
-        direction=(direction+1)%2 //* change direction
-        console.log("changing direction here isntead near the error")
-    }
-    //reorder(direction,directionChecker); //* Changes rgb order
 }
+//! How to break setInterval?
 
 let colorToPaint=000000;
 let pos=0;
@@ -212,4 +233,4 @@ allColors = ()=>
         //console.log(`The hex code of your color is${colorToPaint}`)
         pos++;
     } 
-}
+} //! 158 164

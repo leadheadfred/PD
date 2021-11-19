@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Our sample ROQ site"></meta>
+    <title>Sample ROQ site</title>
+<body>
+    <script src="higherOrLower.js"></script>
+    <!--<img src="./Images/2048.png" width = "500" height = "500"img>-->
+    <input id="startButton" type="button" value="Start" style="font-size : 20px; width: 100%; height: 200px;" onclick="start();" />
+    <input id="higher" type="button" value="Higher" style="font-size : 20px; width: 200px; height: 200px;display:none;" onclick="main(`higher`);" />
+    <input id="lower" type="button" value="Lower" style="font-size : 20px; width: 200px; height: 200px; display:none;" onclick="main(`lower`);" />
+    <input id="bet+" type="button" value="Increase bet" style="font-size : 20px; width: 200px; height: 200px;display:none;" onclick="betFunction(`increase`,1);" />
+    <input id="bet-" type="button" value="Decrease bet" style="font-size : 20px; width: 200px; height: 200px;display:none;" onclick="betFunction(`decrease`,1);" />
+    <input id="automate" type="button" value="Automate" style="font-size : 20px; width: 200px; height: 200px;display:none;" onclick="automate();" />
+    <input id="reset" type="button" value="Reset" style="font-size : 10px; width: 50px; height: 50px;display:none;" onclick="reset();" />
+
+
+<div id="hello"></div>
+<div id="probability"></div>
+<div id="coins"></div>
+<div id="bet"></div>
+<div id="reward"></div>
+<div id="winOrLoss"></div>
+<div id="iterations"></div>
+
+
+
+
+
+
+    <!--<input id="duckButton" type="image" src = "./Images/Duck.jpg" width = "300" height = "196" value="Duck" onclick="duckSong();" />
+    <input id="gooseButton" type="image" src = "./Images/Goose.jpg" width = "150" height = "196" value="Goose" onclick="Goose();" />
+    <input id="pianoButton" type="image" src = "./Images/piano.webp" width = "543" height = "251" value="Goose" onclick="showCoords(event);" />
+    <input id="listButton" type="button" value="listTesting" onclick="listTesting();" />
+<input id="TestButton" type="button" value="Test" onclick="test();" />
+<input id="passwordButton" type="button" value="Password" onclick="password();" />
+<input id="duckButton" type="button" value="Duck" onclick="Duck();" />
+<input id="gooseButton" type="button" value="Goose" onclick="Goose();" />
+<input id="gooseButton" type="button" value="Elephant" onclick="Elephant();" />
+<div onclick="showCoords(event)"><p id="demo"></p></div>
+
+<script>
+function showCoords(event) {
+  var cX = event.clientX;
+  var sX = event.screenX;
+  var cY = event.clientY;
+  var sY = event.screenY;
+  var coords1 = "client - X: " + cX + ", Y coords: " + cY;
+  document.getElementById("demo").innerHTML = coords1;
+  Piano(cX,cY);
+}
+</script>-->
+<p id="demo"></p>
+</body>
+</html>
